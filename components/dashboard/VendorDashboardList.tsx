@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/Skeleton";
 import ShipTrackingModal from "@/components/dashboard/ShipTrackingModal";
+import TransactionHistoryExport from "@/components/dashboard/TransactionHistoryExport";
 import { getVendorEscrows } from "@/lib/api";
 import type { Escrow } from "@/types";
 import EmptyVendorState from "./EmptyVendorState";
@@ -58,6 +59,14 @@ export default function VendorDashboardList({ loading = false }: { loading?: boo
 
   return (
     <>
+      {escrows.length > 0 && (
+        <div className="mb-4 flex justify-end">
+          <TransactionHistoryExport
+            escrows={escrows}
+            vendorId={escrows[0]?.vendorId || "vendor"}
+          />
+        </div>
+      )}
       <div className="space-y-4">
         {escrows.map((escrow) => (
           <div key={escrow.id} className="rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
