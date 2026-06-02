@@ -11,6 +11,7 @@ import TestnetBanner from "@/components/layout/TestnetBanner";
 import { ServiceWorkerProvider } from "@/components/providers/ServiceWorkerProvider";
 import { Toaster } from "sonner";
 import CommandPalette from "@/components/ui/CommandPalette";
+import TopProgressBar from "@/components/ui/TopProgressBar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,6 +41,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        <TopProgressBar />
         <TestnetBanner />
         <ServiceWorkerProvider />
         <a
