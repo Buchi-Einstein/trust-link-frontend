@@ -108,7 +108,7 @@ export default function PaymentForm({
 import React, { useState } from "react";
 import useWallet from "@/hooks/useWallet";
 import { signTransaction } from "@/lib/stellar/freighter";
-import { getStellarExpertUrl } from "@/lib/explorer";
+import { getStellarExpertTxUrl } from "@/lib/explorer";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { useNetwork } from "@/components/providers/NetworkProvider";
@@ -258,7 +258,7 @@ export default function PaymentForm({
             Transaction: {truncateHash(txHash)}
           </p>
           <a
-            href={getStellarExpertUrl(txHash, network)}
+            href={getStellarExpertTxUrl(txHash)}
             target="_blank"
             rel="noopener noreferrer"
             className="mt-3 inline-block text-sm font-medium text-green-700 underline hover:text-green-800 dark:text-green-400 dark:hover:text-green-300"

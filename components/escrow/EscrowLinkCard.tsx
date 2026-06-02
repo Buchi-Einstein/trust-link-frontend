@@ -1,15 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import dynamic from "next/dynamic";
 import { Skeleton } from "@/components/ui/Skeleton";
 import OptimizedImage from "@/components/ui/OptimizedImage";
-import { QRCodeCanvas } from "qrcode.react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Copy, Share2, Download, X, MessageCircle, Instagram } from "lucide-react";
 import { toast } from "sonner";
 import { formatUSDC } from "@/utils/currency";
 import { track } from "@/lib/analytics";
+
+const QRCodeCanvas = dynamic(
+  () => import("qrcode.react").then((m) => m.QRCodeCanvas),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-[200px] w-[200px] animate-pulse rounded bg-zinc-100 dark:bg-zinc-800" />
+    ),
+  }
+);
 
 async function fetchEscrowLink() {
   await new Promise((resolve) => setTimeout(resolve, 150));
