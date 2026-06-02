@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { Escrow, EscrowStatus } from "@/types";
 import { CheckCircle2, Circle, Clock, Package, Truck, Home } from "lucide-react";
@@ -65,9 +65,12 @@ export default function TrackingTimeline({
   loading = false,
 }: TrackingTimelineProps) {
   const { t, i18n } = useTranslation();
-  const [escrow, setEscrow] = useState<Escrow>(initialEscrow);
-  const [error, setError] = useState<Error | null>(null);
-  const { escrow, isLoading, error: fetchError, refetch } = useEscrow(escrowId, {
+  const {
+    escrow,
+    isLoading,
+    error: fetchError,
+    refetch,
+  } = useEscrow(escrowId, {
     initialData: initialEscrow,
     refreshInterval: 30000,
   });
@@ -79,15 +82,14 @@ export default function TrackingTimeline({
   useEffect(() => {
     const pollInterval = setInterval(async () => {
       try {
-        const updatedEscrow = await getEscrow(escrowId);
-        setEscrow(updatedEscrow);
+        await refetch();
       } catch (err) {
         console.error("Failed to poll escrow status:", err);
       }
     }, 30000);
 
     return () => clearInterval(pollInterval);
-  }, [escrowId]);
+  }, [refetch, escrowId]);
 
   const handleConfirmDelivery = async () => {
     setIsConfirming(true);
@@ -97,21 +99,9 @@ export default function TrackingTimeline({
         { method: "POST" }
       );
       if (!response.ok) throw new Error("Failed to confirm delivery");
-      const updatedEscrow = await response.json();
-      setEscrow(updatedEscrow);
-    } catch (err) {
-      setError(err instanceof Error ? err : new Error("Failed to confirm delivery"));
-  const handleConfirmDelivery = async () => {
-    setIsConfirming(true);
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/escrows/${escrowId}/confirm`, {
-        method: 'POST',
-      });
-      if (!response.ok) throw new Error('Failed to confirm delivery');
-      
       await refetch();
     } catch (err) {
-      setLocalError(err instanceof Error ? err : new Error('Failed to confirm delivery'));
+      setLocalError(err instanceof Error ? err : new Error("Failed to confirm delivery"));
     } finally {
       setIsConfirming(false);
     }
@@ -209,7 +199,7 @@ export default function TrackingTimeline({
                       {new Intl.DateTimeFormat(i18n.language, {
                         dateStyle: "medium",
                         timeStyle: "short",
-                      }).format(new Date(escrow.updatedAt))}
+                      }).format(new Date(activeEscrow.updatedAt))}
                     </p>
                   )}
                 </div>
