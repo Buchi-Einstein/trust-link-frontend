@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Download } from "lucide-react";
 import { Skeleton } from "@/components/ui/Skeleton";
 import ShipTrackingModal from "@/components/dashboard/ShipTrackingModal";
+import TransactionHistoryExport from "@/components/dashboard/TransactionHistoryExport";
 import { getVendorEscrows } from "@/lib/api";
 import { downloadCsv } from "@/utils/exportCsv";
 import type { Escrow } from "@/types";
@@ -76,6 +77,14 @@ export default function VendorDashboardList({ loading = false }: { loading?: boo
 
   return (
     <>
+      {escrows.length > 0 && (
+        <div className="mb-4 flex justify-end">
+          <TransactionHistoryExport
+            escrows={escrows}
+            vendorId={escrows[0]?.vendorId || "vendor"}
+          />
+        </div>
+      )}
       <div className="mb-4 flex justify-end">
         <button
           id="export-csv-button"
