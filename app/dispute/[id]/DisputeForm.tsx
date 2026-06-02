@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { ChevronLeft, ChevronRight, Upload, X, AlertCircle, CheckCircle2 } from "lucide-react";
 import { createDispute } from "@/lib/api";
+import { track } from "@/lib/analytics";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
@@ -72,6 +73,7 @@ export default function DisputeForm({ escrowId }: DisputeFormProps) {
     setIsSubmitting(true);
     try {
       await createDispute(escrowId, values);
+      track("dispute_raised", { escrowId });
       toast.success("Dispute raised successfully");
       router.push(`/track/${escrowId}`);
     } catch (error: any) {

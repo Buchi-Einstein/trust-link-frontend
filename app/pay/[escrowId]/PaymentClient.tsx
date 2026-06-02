@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Escrow } from "@/types";
 import { useWallet } from "@/components/providers/WalletProvider";
 import { useTranslation } from "react-i18next";
+import { track } from "@/lib/analytics";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
@@ -20,6 +21,7 @@ export default function PaymentClient({ escrow }: { escrow: Escrow }) {
   const handleSubmitPayment = async () => {
     setIsSubmitting(true);
     setPaymentError(null);
+    track("payment_initiated", { escrowId: escrow.id });
     try {
       const res = await fetch(`${API_URL}/escrows/${escrow.id}/fund`, {
         method: "POST",
@@ -29,6 +31,7 @@ export default function PaymentClient({ escrow }: { escrow: Escrow }) {
       if (!res.ok) throw new Error("Payment submission failed");
       const data = await res.json();
       setTxHash(data.txHash ?? data.transactionHash ?? data.hash ?? "mock_tx_hash");
+      track("payment_completed", { escrowId: escrow.id });
     } catch (e: unknown) {
       setPaymentError(e instanceof Error ? e.message : "Payment failed");
     } finally {
