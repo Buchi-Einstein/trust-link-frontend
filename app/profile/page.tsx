@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useWallet } from "@/components/providers/WalletProvider";
 
 export default function ProfilePage() {
@@ -18,12 +19,20 @@ export default function ProfilePage() {
                   {publicKey}
                 </p>
               </div>
-              <button
-                onClick={disconnect}
-                className="rounded-2xl border-2 border-red-600 bg-transparent px-5 py-2 text-sm font-semibold text-red-600 hover:bg-red-50 dark:border-red-500 dark:text-red-500 dark:hover:bg-red-950"
-              >
-                Disconnect Wallet
-              </button>
+              <div className="flex flex-wrap gap-3">
+                <Link
+                  href="/settings/profile"
+                  className="inline-block rounded-2xl border border-zinc-200 px-5 py-2 text-sm font-semibold text-zinc-900 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-100 dark:hover:bg-zinc-800"
+                >
+                  Edit Profile Settings
+                </Link>
+                <button
+                  onClick={disconnect}
+                  className="rounded-2xl border-2 border-red-600 bg-transparent px-5 py-2 text-sm font-semibold text-red-600 hover:bg-red-50 dark:border-red-500 dark:text-red-500 dark:hover:bg-red-950"
+                >
+                  Disconnect Wallet
+                </button>
+              </div>
             </div>
           ) : (
             <p className="text-zinc-600 dark:text-zinc-400">No wallet connected.</p>
