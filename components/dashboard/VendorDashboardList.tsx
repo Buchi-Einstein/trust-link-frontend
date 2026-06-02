@@ -16,6 +16,7 @@ import { formatUSDC } from "@/utils/currency";
 const ITEMS_PER_PAGE = 10;
 
 export default function VendorDashboardList({ loading = false }: { loading?: boolean }) {
+  const { i18n } = useTranslation();
   const [escrows, setEscrows] = useState<Escrow[] | null>(null);
   const [error, setError] = useState<Error | null>(null);
   const [selectedEscrow, setSelectedEscrow] = useState<Escrow | null>(null);
