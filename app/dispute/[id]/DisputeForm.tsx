@@ -109,12 +109,12 @@ export default function DisputeForm({ escrowId }: DisputeFormProps) {
       <div className="space-y-2">
         <label className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">Evidence files</label>
         <div
-          onDragOver={(event: DragEvent<HTMLLabelElement>) => {
+          onDragOver={(event: React.DragEvent<HTMLDivElement>) => {
             event.preventDefault();
             setIsDragging(true);
           }}
           onDragLeave={() => setIsDragging(false)}
-          onDrop={(event: DragEvent<HTMLLabelElement>) => {
+          onDrop={(event: React.DragEvent<HTMLDivElement>) => {
             event.preventDefault();
             setIsDragging(false);
             handleFileSelection(event.dataTransfer.files);

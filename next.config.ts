@@ -2,9 +2,7 @@ import type { NextConfig } from "next";
 import { withSentryConfig } from "@sentry/nextjs";
 
 // Validated at config-load time so `next build` and `next dev` fail immediately
-// with a clear message instead of surfacing a cryptic undefined at runtime.
-// Validated at config-load time (next build / next dev). Fail fast with a
-// clear message rather than surfacing a cryptic runtime undefined later.
+// with a clear message instead of surfacing a cryptic runtime undefined later.
 const REQUIRED_ENV_VARS = [
   "NEXT_PUBLIC_API_URL",
   "NEXT_PUBLIC_CONTRACT_ID",
@@ -23,7 +21,6 @@ for (const key of REQUIRED_ENV_VARS) {
 
 const nextConfig: NextConfig = {
   // swcMinify is always-on in Next.js 15+ and has no config toggle.
-  // swcMinify is always-on in Next.js 15+ and cannot be set explicitly.
   compress: true,
 
   images: {
@@ -40,15 +37,12 @@ const nextConfig: NextConfig = {
         hostname: "testnet.stellarexpert.io",
         pathname: "/**",
       },
-      // S3 evidence bucket — virtual-hosted-style, global endpoint
-      // S3 evidence bucket — virtual-hosted-style (us-east-1 and global)
       {
         protocol: "https",
         hostname: "*.s3.amazonaws.com",
         pathname: "/**",
       },
-      // S3 evidence bucket — virtual-hosted-style, region-scoped endpoint
-      // S3 evidence bucket — virtual-hosted-style with explicit region
+
       {
         protocol: "https",
         hostname: "*.s3.*.amazonaws.com",
@@ -128,5 +122,5 @@ const nextConfig: NextConfig = {
 
 export default withSentryConfig(nextConfig, {
   silent: true,
-  hideSourceMaps: true,
+  sourcemaps: { disable: true },
 });

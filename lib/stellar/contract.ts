@@ -9,7 +9,7 @@ import {
   xdr,
   BASE_FEE,
   StrKey,
-  SorobanRpc,
+  rpc,
 } from "@stellar/stellar-sdk";
 import { signTransaction } from "./freighter";
 
@@ -78,8 +78,8 @@ export interface SorobanContractCallOptions {
 
 function getNetworkPassphrase(network: "TESTNET" | "PUBLIC") {
   return network === "PUBLIC"
-    ? Networks.PUBLIC_NETWORK_PASSPHRASE
-    : Networks.TESTNET_NETWORK_PASSPHRASE;
+    ? Networks.PUBLIC
+    : Networks.TESTNET;
 }
 
 function toTxError(error: unknown, fallback: string): Error {
@@ -125,7 +125,7 @@ async function invokeSorobanContract(
     throw new Error("Invalid source account public key");
   }
 
-  const server = new SorobanRpc.Server(rpcUrl);
+  const server = new rpc.Server(rpcUrl);
   const networkPassphrase = getNetworkPassphrase(network);
 
   try {
@@ -146,7 +146,7 @@ async function invokeSorobanContract(
 
     const signedXdr = await signTransaction(tx.toXDR(), networkPassphrase);
     const txEnvelope = xdr.TransactionEnvelope.fromXDR(signedXdr, "base64");
-    const response = await server.sendTransaction(txEnvelope);
+    const response = await server.sendTransaction(txEnvelope as any);
 
     if ((response as any)?.status === "ERROR" || (response as any)?.status === "FAILED") {
       throw toTxError((response as any)?.errorResultXdr || (response as any)?.error, "Transaction failed");
@@ -154,12 +154,12 @@ async function invokeSorobanContract(
 
     if ((response as any)?.status === "PENDING") {
       const txResponse = await server.getTransaction((response as any).hash);
-      if (txResponse.status === "FAILED") {
-        throw toTxError(txResponse.errorResultXdr || txResponse.resultXdr, "Transaction failed");
+      if ((txResponse as any).status === "FAILED") {
+        throw toTxError((txResponse as any).errorResultXdr || (txResponse as any).resultXdr, "Transaction failed");
       }
       return {
         hash: (response as any).hash,
-        resultXdr: txResponse.resultXdr || "",
+        resultXdr: (txResponse as any).resultXdr || "",
       };
     }
 
@@ -256,7 +256,7 @@ export function buildContractInvocation(options: ContractCallOptions): string {
 
   // Get network passphrase
   const networkPassphrase =
-    network === "PUBLIC" ? Networks.PUBLIC_NETWORK_PASSPHRASE : Networks.TESTNET_NETWORK_PASSPHRASE;
+    network === "PUBLIC" ? Networks.PUBLIC : Networks.TESTNET;
 
   // Build the contract instance
   const contract = new Contract(contractId);
@@ -408,7 +408,7 @@ export function buildContractDeployment(
   }
 
   const networkPassphrase =
-    network === "PUBLIC" ? Networks.PUBLIC_NETWORK_PASSPHRASE : Networks.TESTNET_NETWORK_PASSPHRASE;
+    network === "PUBLIC" ? Networks.PUBLIC : Networks.TESTNET;
 
   const account = {
     accountId: sourceAccount,

@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState, useRef, type FormEvent } from "react";
 import { createEscrow, type EscrowInput } from "@/lib/api";
 import { track } from "@/lib/analytics";
+import { toast } from "sonner";
 
 const shippingOptions = ["Same day", "1-3 days", "1 week", "Custom"] as const;
 
@@ -113,6 +114,7 @@ export default function EscrowCreateForm() {
   const [resultUrl, setResultUrl] = useState<string | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [copyStatus, setCopyStatus] = useState<string | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const updateField = <K extends keyof FormValues>(field: K, value: FormValues[K]) => {
     setValues((current) => ({ ...current, [field]: value }));
@@ -167,7 +169,7 @@ export default function EscrowCreateForm() {
   const downloadQR = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const escrowId = getEscrowIdFromUrl(resultUrl || "escrow");
+    const escrowId = (resultUrl || "escrow").split("/").pop() || "escrow";
     const pngUrl = canvas.toDataURL("image/png");
     const a = document.createElement("a");
     a.href = pngUrl;

@@ -149,12 +149,12 @@ export default function VendorOnboardingWizard() {
       return;
     }
 
-    setState((current) => ({ ...current, step: Math.min(2, current.step + 1) }));
+    setState((current) => ({ ...current, step: Math.min(2, current.step + 1) as OnboardingStep }));
     setErrors({});
   };
 
   const handleBack = () => {
-    setState((current) => ({ ...current, step: Math.max(0, current.step - 1) }));
+    setState((current) => ({ ...current, step: Math.max(0, current.step - 1) as OnboardingStep }));
   };
 
   const handleFinish = () => {

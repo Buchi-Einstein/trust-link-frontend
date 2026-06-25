@@ -38,8 +38,8 @@ vi.mock("@stellar/stellar-sdk", () => {
       };
     }),
     Networks: {
-      PUBLIC_NETWORK_PASSPHRASE: "Public Global Stellar Network ; September 2015",
-      TESTNET_NETWORK_PASSPHRASE: "Test SDF Network ; September 2015",
+      PUBLIC: "Public Global Stellar Network ; September 2015",
+      TESTNET: "Test SDF Network ; September 2015",
     },
     Operation: {
       invokeHostFunction: vi.fn().mockReturnValue({}),
@@ -51,7 +51,7 @@ vi.mock("@stellar/stellar-sdk", () => {
         fromXDR: vi.fn().mockReturnValue("tx-envelope"),
       },
     },
-    SorobanRpc: {
+    rpc: {
       Server: vi.fn().mockImplementation(() => ({
         getAccount: vi.fn().mockResolvedValue({ accountId: "GTEST", sequenceNumber: "0" }),
         sendTransaction: vi.fn(),

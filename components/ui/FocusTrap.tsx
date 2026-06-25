@@ -105,17 +105,16 @@ export default function FocusTrap({
 
     const first = focusable[0];
     const last = focusable[focusable.length - 1];
-    const active = document.activeElement;
+    const focused = document.activeElement;
 
     if (e.shiftKey) {
       // Shift+Tab: if focus is on the first element, wrap to the last.
-      if (active === first) {
+      if (focused === first) {
         e.preventDefault();
         last.focus();
       }
     } else {
-      // Tab: if focus is on the last element, wrap to the first.
-      if (active === last) {
+      if (focused === last) {
         e.preventDefault();
         first.focus();
       }

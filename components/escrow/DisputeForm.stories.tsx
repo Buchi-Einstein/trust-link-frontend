@@ -41,7 +41,7 @@ export const Step2DisputeDetails: Story = {
   args: {
     onSubmit: async () => {},
   },
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
     const canvas = within(canvasElement);
 
     await userEvent.type(canvas.getByLabelText("name"), "Amara Okafor");
@@ -63,16 +63,14 @@ export const Step3EvidenceUpload: Story = {
   args: {
     onSubmit: async () => {},
   },
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
     const canvas = within(canvasElement);
 
-    // Step 1
     await userEvent.type(canvas.getByLabelText("name"), "Emeka Nwosu");
     await userEvent.type(canvas.getByLabelText("email"), "emeka@example.com");
     await userEvent.type(canvas.getByLabelText("order number"), "ORD-00456");
     await userEvent.click(canvas.getByTestId("next-button"));
 
-    // Step 2
     await userEvent.selectOptions(canvas.getByLabelText("reason"), "damaged_product");
     await userEvent.type(
       canvas.getByLabelText("description"),
@@ -94,16 +92,14 @@ export const Step4ReviewAndSubmit: Story = {
   args: {
     onSubmit: async () => {},
   },
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
     const canvas = within(canvasElement);
 
-    // Step 1
     await userEvent.type(canvas.getByLabelText("name"), "Chioma Adeleke");
     await userEvent.type(canvas.getByLabelText("email"), "chioma@example.com");
     await userEvent.type(canvas.getByLabelText("order number"), "ORD-00789");
     await userEvent.click(canvas.getByTestId("next-button"));
 
-    // Step 2
     await userEvent.selectOptions(canvas.getByLabelText("reason"), "wrong_product");
     await userEvent.type(
       canvas.getByLabelText("description"),
@@ -111,10 +107,7 @@ export const Step4ReviewAndSubmit: Story = {
     );
     await userEvent.click(canvas.getByTestId("next-button"));
 
-    // Step 3 — skip evidence by directly clicking next
-    // (evidence validation fires on next, but we'll simulate navigating forward)
-    // Manually trigger next for story purposes using the back/forward simulation
-    await userEvent.click(canvas.getByTestId("next-button")).catch(() => {});
+    try { await userEvent.click(canvas.getByTestId("next-button")); } catch { /* skip evidence step gracefully */ }
   },
   parameters: {
     docs: {
@@ -137,7 +130,7 @@ export const SubmittingState: Story = {
         void resolve;
       }),
   },
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
     const canvas = within(canvasElement);
 
     await userEvent.type(canvas.getByLabelText("name"), "Tunde Fashola");
@@ -169,7 +162,7 @@ export const SuccessState: Story = {
     },
     onSuccess: () => {},
   },
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
     const canvas = within(canvasElement);
 
     await userEvent.type(canvas.getByLabelText("name"), "Ngozi Effiong");
@@ -187,7 +180,7 @@ export const SuccessState: Story = {
   parameters: {
     docs: {
       description: {
-        story: "Green confirmation screen with a "Submit Another Dispute" reset button.",
+        story: 'Green confirmation screen with a "Submit Another Dispute" reset button.',
       },
     },
   },
@@ -202,7 +195,7 @@ export const ErrorState: Story = {
       throw new Error("Server error: 503 Service Unavailable");
     },
   },
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
     const canvas = within(canvasElement);
 
     await userEvent.type(canvas.getByLabelText("name"), "Seun Abara");
@@ -233,7 +226,7 @@ export const Step1ValidationErrors: Story = {
   args: {
     onSubmit: async () => {},
   },
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
     const canvas = within(canvasElement);
     // Submit without filling anything — all three fields should show errors
     await userEvent.click(canvas.getByTestId("next-button"));
@@ -252,7 +245,7 @@ export const Step2ValidationErrors: Story = {
   args: {
     onSubmit: async () => {},
   },
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
     const canvas = within(canvasElement);
 
     // Fill Step 1 correctly

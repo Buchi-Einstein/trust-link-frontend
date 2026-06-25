@@ -6,13 +6,13 @@ import { Skeleton } from "@/components/ui/Skeleton";
 import OptimizedImage from "@/components/ui/OptimizedImage";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Copy, Share2, Download, X, MessageCircle, Instagram } from "lucide-react";
+import { Copy, Share2, Download, X, MessageCircle, Image } from "lucide-react";
 import { toast } from "sonner";
 import { formatUSDC } from "@/utils/currency";
 import { track } from "@/lib/analytics";
 
-const QRCodeCanvas = dynamic(
-  () => import("qrcode.react").then((m) => m.QRCodeCanvas),
+const QRCodeSVG = dynamic(
+  () => import("qrcode.react").then((m) => m.QRCodeSVG),
   {
     ssr: false,
     loading: () => (
@@ -34,7 +34,15 @@ async function fetchEscrowLink() {
   };
 }
 
-export default function EscrowLinkCard({ loading = false }: { loading?: boolean }) {
+export default function EscrowLinkCard({
+  loading = false,
+  onCopySuccess,
+  onCopyError,
+}: {
+  loading?: boolean;
+  onCopySuccess?: () => void;
+  onCopyError?: (err: Error) => void;
+}) {
   const [link, setLink] = useState<{
     title: string;
     status: string;
@@ -45,6 +53,17 @@ export default function EscrowLinkCard({ loading = false }: { loading?: boolean 
     imageUrl?: string;
   } | null>(null);
   const [error, setError] = useState<Error | null>(null);
+  const [isCopying, setIsCopying] = useState(false);
+  const [copyStatus, setCopyStatus] = useState<"idle" | "success" | "error">("idle");
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [showQRCode, setShowQRCode] = useState(false);
+
+  const copyToClipboard = async (text: string) => {
+    if (!navigator.clipboard || !navigator.clipboard.writeText) {
+      throw new Error("Clipboard not supported");
+    }
+    await navigator.clipboard.writeText(text);
+  };
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -65,6 +84,8 @@ export default function EscrowLinkCard({ loading = false }: { loading?: boolean 
     );
   }
 
+  if (!link) return null;
+
   const handleCopy = async () => {
     if (isCopying) return;
     
@@ -76,7 +97,7 @@ export default function EscrowLinkCard({ loading = false }: { loading?: boolean 
         throw new Error("Clipboard not supported");
       }
       
-      await navigator.clipboard.writeText(url);
+      await navigator.clipboard.writeText(link!.url);
       setCopyStatus("success");
       onCopySuccess?.();
       setTimeout(() => setCopyStatus("idle"), 2000);
@@ -207,7 +228,7 @@ export default function EscrowLinkCard({ loading = false }: { loading?: boolean 
             Shareable link ready
           </h2>
           <p className="text-sm text-zinc-500 dark:text-zinc-400">
-            Escrow ID: {escrowId}
+            Escrow ID: {link.escrowId}
           </p>
         </div>
       </div>
@@ -216,12 +237,11 @@ export default function EscrowLinkCard({ loading = false }: { loading?: boolean 
         <div className="relative">
           <input
             readOnly
-            value={url}
+            value={link.url}
             data-testid="escrow-link"
             className="w-full rounded-2xl border border-zinc-200 bg-zinc-50 px-4 py-3 font-mono text-sm text-zinc-900 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100"
           />
-          {/* Also render the URL as text for tests that expect getByText */}
-          <span className="sr-only">{url}</span>
+          <span className="sr-only">{link.url}</span>
         </div>
 
         <div className="flex gap-2">
@@ -255,7 +275,7 @@ export default function EscrowLinkCard({ loading = false }: { loading?: boolean 
             title="Share on Instagram"
             className="hover:bg-pink-50 dark:hover:bg-pink-950"
           >
-            <Instagram className="h-4 w-4" />
+            <Image className="h-4 w-4" />
           </Button>
           <Button 
             variant="outline" 
@@ -282,7 +302,7 @@ export default function EscrowLinkCard({ loading = false }: { loading?: boolean 
         <div className="mt-6 flex justify-center">
           <div className="rounded-3xl border border-zinc-100 bg-white p-4 shadow-inner dark:border-zinc-800">
             <QRCodeSVG
-              value={url}
+              value={link.url}
               size={160}
               data-testid="qr-code"
               aria-label="QR code for payment"

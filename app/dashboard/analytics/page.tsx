@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import VendorAnalyticsSection from "@/components/dashboard/VendorAnalyticsSection";
 
 export const metadata = {
@@ -6,5 +7,9 @@ export const metadata = {
 };
 
 export default function VendorAnalyticsPage() {
-  return <VendorAnalyticsSection />;
+  return (
+    <Suspense fallback={null}>
+      <VendorAnalyticsSection />
+    </Suspense>
+  );
 }

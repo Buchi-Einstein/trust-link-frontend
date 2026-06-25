@@ -4,6 +4,7 @@ import { getAdminDisputes } from "@/lib/api";
 import { Dispute } from "@/types";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useRouter } from "next/navigation";
 import { formatUSDC } from "@/utils/currency";
 

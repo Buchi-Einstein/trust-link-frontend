@@ -1,3 +1,4 @@
+import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import PaymentForm from "./PaymentForm";
 
@@ -8,7 +9,7 @@ const meta: Meta<typeof PaymentForm> = {
     layout: "centered",
   },
   decorators: [
-    (Story) => (
+    (Story: () => React.ReactNode) => (
       <div className="min-h-screen bg-zinc-100 dark:bg-zinc-900 p-8">
         <div className="max-w-md mx-auto">
           <Story />

@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Sparkles, X } from "lucide-react";
 import ErrorBoundary from "@/components/layout/ErrorBoundary";
@@ -39,7 +40,7 @@ function UpgradeBanner({ onDismiss }: { onDismiss: () => void }) {
   );
 }
 
-export default function DashboardPage() {
+function DashboardContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isChecking, setIsChecking] = useState(true);
@@ -56,7 +57,6 @@ export default function DashboardPage() {
     }
   }, [router]);
 
-  // Show banner once on ?upgraded=1, then strip the param from the URL
   useEffect(() => {
     if (searchParams.get("upgraded") === "1" && !didStrip.current) {
       didStrip.current = true;
@@ -105,5 +105,13 @@ export default function DashboardPage() {
         </ErrorBoundary>
       </div>
     </main>
+  );
+}
+
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={null}>
+      <DashboardContent />
+    </Suspense>
   );
 }

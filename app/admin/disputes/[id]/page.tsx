@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { getDispute } from "@/lib/api";
 import { DisputeDetailsClient } from "./DisputeDetailsClient";
 import { notFound } from "next/navigation";
@@ -34,7 +35,9 @@ export default async function DisputeDetailsPage({ params }: PageProps) {
             <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">Dispute Details</h1>
           </div>
           
-          <DisputeDetailsClient dispute={dispute} />
+          <Suspense fallback={null}>
+            <DisputeDetailsClient dispute={dispute} />
+          </Suspense>
         </div>
       </div>
     );

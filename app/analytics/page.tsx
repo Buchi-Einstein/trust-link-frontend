@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -206,7 +206,7 @@ function AnalyticsContent({ escrows }: { escrows: Escrow[] }) {
   );
 }
 
-export default function AnalyticsPage() {
+function AnalyticsPageContent() {
   const router = useRouter();
   const { isPro, isLoading: planLoading } = useSubscription();
   const [escrows, setEscrows] = useState<Escrow[] | null>(null);
@@ -285,5 +285,13 @@ export default function AnalyticsPage() {
         )}
       </div>
     </main>
+  );
+}
+
+export default function AnalyticsPage() {
+  return (
+    <Suspense fallback={null}>
+      <AnalyticsPageContent />
+    </Suspense>
   );
 }

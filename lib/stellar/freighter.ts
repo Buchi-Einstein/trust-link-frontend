@@ -1,6 +1,6 @@
 import {
   isConnected,
-  getPublicKey,
+  getAddress,
   signTransaction as freighterSignTransaction,
   isAllowed,
   setAllowed,
@@ -40,7 +40,7 @@ export async function connectFreighter(): Promise<string> {
     await setAllowed();
   }
 
-  const publicKey = await getPublicKey();
+  const { address: publicKey } = await getAddress();
   if (!publicKey) {
     throw new Error("Failed to get public key from Freighter");
   }
@@ -73,25 +73,21 @@ export async function signTransaction(
       throw new Error("Freighter not installed");
     }
 
-    // Freighter's signTransaction takes (xdr, { network })
-    const { signedTransaction, error } = await freighterSignTransaction({
-      xdr,
-      network,
-    });
+    const { signedTransaction: signedTxXdr, error } = await (freighterSignTransaction as any)(xdr, { networkPassphrase: network });
 
     if (error) {
       throw new Error(error);
     }
 
-    if (!signedTransaction) {
+    if (!signedTxXdr) {
       throw new Error("Failed to sign transaction");
     }
 
-    return signedTransaction;
+    return signedTxXdr;
   } catch (error: any) {
     captureWalletError(error, { xdr, network, action: "signTransaction" });
     throw error;
   }
 }
 
-export { isConnected, getPublicKey };
+export { isConnected, getAddress };

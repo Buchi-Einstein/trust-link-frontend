@@ -13,12 +13,15 @@ import { jwtDecode } from "jwt-decode";
 import * as Sentry from "@sentry/nextjs";
 import { useNetwork } from "@/components/providers/NetworkProvider";
 
+type WalletStatus = "loading" | "connected" | "disconnected" | "not-installed" | "error";
+
 interface WalletContextType {
   publicKey: string | null;
   token: string | null;
   jwt: string | null;
   isConnected: boolean;
   isInstalled: boolean;
+  status: WalletStatus;
   connect: () => Promise<void>;
   disconnect: () => void;
   signTransaction: (xdr: string, network?: string) => Promise<string>;
@@ -173,6 +176,15 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
         jwt,
         isConnected: !!publicKey,
         isInstalled,
+        status: isLoading
+          ? "loading"
+          : !!publicKey
+            ? "connected"
+            : !isInstalled
+              ? "not-installed"
+              : error
+                ? "error"
+                : "disconnected",
         connect,
         disconnect,
         signTransaction,

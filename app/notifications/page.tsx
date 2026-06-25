@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState, type JSX } from "react";
 import {
   AlertCircle,
   ArrowLeft,
@@ -87,7 +87,7 @@ function NotificationRow({ n, onRead }: { n: AppNotification; onRead: (id: strin
   );
 }
 
-export default function NotificationsPage() {
+function NotificationsContent() {
   const router = useRouter();
   const [isChecking, setIsChecking] = useState(true);
   const { notifications, unreadCount, markAsRead, markAllAsRead, isLoading } =
@@ -111,7 +111,6 @@ export default function NotificationsPage() {
   return (
     <main className="min-h-screen bg-zinc-50 p-6 dark:bg-black">
       <div className="mx-auto max-w-2xl">
-        {/* Header */}
         <div className="mb-6 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <button
@@ -147,7 +146,6 @@ export default function NotificationsPage() {
           )}
         </div>
 
-        {/* Content */}
         {isLoading && notifications.length === 0 ? (
           <div className="space-y-3">
             {[...Array(5)].map((_, i) => (
@@ -182,5 +180,13 @@ export default function NotificationsPage() {
         )}
       </div>
     </main>
+  );
+}
+
+export default function NotificationsPage() {
+  return (
+    <Suspense fallback={null}>
+      <NotificationsContent />
+    </Suspense>
   );
 }

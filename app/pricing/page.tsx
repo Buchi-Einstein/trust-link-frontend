@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Check, Sparkles, X } from "lucide-react";
@@ -54,7 +54,7 @@ function FeatureRow({ label, included }: { label: string; included: boolean }) {
   );
 }
 
-export default function PricingPage() {
+function PricingContent() {
   const router = useRouter();
   const { isPro, isLoading, refetch } = useSubscription();
   const [isUpgrading, setIsUpgrading] = useState(false);
@@ -286,5 +286,13 @@ export default function PricingPage() {
         </div>
       </div>
     </main>
+  );
+}
+
+export default function PricingPage() {
+  return (
+    <Suspense fallback={null}>
+      <PricingContent />
+    </Suspense>
   );
 }

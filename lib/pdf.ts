@@ -111,12 +111,12 @@ export function generateSummaryPDF(
 
   // Header
   pdf.setFontSize(20);
-  pdf.setFont(undefined, 'bold');
+  pdf.setFont('helvetica', 'bold');
   pdf.text('Transaction History Report', margin, yPosition);
   yPosition += 10;
 
   pdf.setFontSize(10);
-  pdf.setFont(undefined, 'normal');
+  pdf.setFont('helvetica', 'normal');
   const generatedDate = new Date().toLocaleString();
   pdf.text(`Generated on: ${generatedDate}`, margin, yPosition);
   yPosition += 8;
@@ -124,12 +124,12 @@ export function generateSummaryPDF(
   yPosition += 12;
 
   // Summary Section
-  pdf.setFont(undefined, 'bold');
+  pdf.setFont('helvetica', 'bold');
   pdf.setFontSize(12);
   pdf.text('Summary', margin, yPosition);
   yPosition += 8;
 
-  pdf.setFont(undefined, 'normal');
+  pdf.setFont('helvetica', 'normal');
   pdf.setFontSize(10);
   pdf.text(`Total Transactions: ${data.totalTransactions}`, margin + 5, yPosition);
   yPosition += 6;
@@ -137,12 +137,12 @@ export function generateSummaryPDF(
   yPosition += 12;
 
   // Status Breakdown
-  pdf.setFont(undefined, 'bold');
+  pdf.setFont('helvetica', 'bold');
   pdf.setFontSize(11);
   pdf.text('Status Breakdown', margin, yPosition);
   yPosition += 7;
 
-  pdf.setFont(undefined, 'normal');
+  pdf.setFont('helvetica', 'normal');
   pdf.setFontSize(9);
   Object.entries(data.statusBreakdown).forEach(([status, count]) => {
     pdf.text(`${status}: ${count}`, margin + 5, yPosition);
@@ -152,13 +152,13 @@ export function generateSummaryPDF(
   yPosition += 5;
 
   // Transactions Table
-  pdf.setFont(undefined, 'bold');
+  pdf.setFont('helvetica', 'bold');
   pdf.setFontSize(12);
   pdf.text('Transaction Details', margin, yPosition);
   yPosition += 8;
 
   // Table header
-  pdf.setFont(undefined, 'bold');
+  pdf.setFont('helvetica', 'bold');
   pdf.setFontSize(9);
   pdf.setFillColor(240, 240, 240);
   const colWidths = [35, 45, 25, 25, 40, 30];
@@ -176,7 +176,7 @@ export function generateSummaryPDF(
   yPosition += 2;
 
   // Table rows
-  pdf.setFont(undefined, 'normal');
+  pdf.setFont('helvetica', 'normal');
   pdf.setFontSize(8);
 
   data.transactions.forEach((transaction, index) => {
@@ -212,7 +212,7 @@ export function generateSummaryPDF(
 
   // Footer
   pdf.setFontSize(8);
-  pdf.setFont(undefined, 'normal');
+  pdf.setFont('helvetica', 'normal');
   pdf.text(
     'This is an automatically generated report from TrustLink.',
     margin,

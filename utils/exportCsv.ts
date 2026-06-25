@@ -8,7 +8,8 @@ import { sanitizeCsvCell } from "@/lib/sanitize";
  *                  fields appear and what the column headers are called.
  * @param filename - Name of the downloaded file (should end with `.csv`).
  */
-export function downloadCsv<T extends Record<string, unknown>>(
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function downloadCsv<T extends Record<string, any>>(
   rows: T[],
   columns: { key: keyof T; header: string }[],
   filename: string

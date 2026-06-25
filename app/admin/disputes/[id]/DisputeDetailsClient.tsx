@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Dispute } from "@/types";
 import { resolveDispute } from "@/lib/api";
 import { useRouter } from "next/navigation";
 import { useWallet } from "@/components/providers/WalletProvider";
 import { ExternalLink, CheckCircle, XCircle, AlertCircle, Calendar, Package, DollarSign, User } from "lucide-react";
 import { formatUSDC } from "@/utils/currency";
+import { formatTimeAgo } from "@/lib/utils";
 
 interface DisputeDetailsClientProps {
   dispute: Dispute;

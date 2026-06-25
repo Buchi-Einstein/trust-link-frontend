@@ -1,3 +1,4 @@
+import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import TrackingTimeline from "./TrackingTimeline";
 import { Escrow } from "@/types";
@@ -9,7 +10,7 @@ const meta: Meta<typeof TrackingTimeline> = {
     layout: "centered",
   },
   decorators: [
-    (Story) => (
+    (Story: () => React.ReactNode) => (
       <div className="min-h-screen bg-zinc-100 dark:bg-zinc-900 p-8">
         <div className="max-w-2xl mx-auto">
           <Story />
