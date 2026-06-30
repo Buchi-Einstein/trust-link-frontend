@@ -3,7 +3,6 @@
 
 import {
   Contract,
-  Keypair,
   TransactionBuilder,
   Networks,
   Operation,
